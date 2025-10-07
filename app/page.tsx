@@ -16,7 +16,7 @@ export default function Home() {
     <div>
    <Navbar/>
    <BniBadge/>
-   <TalkButton/>
+   {/* <TalkButton/> */}
    <HeroSection/>
    <AboutSection/>
    <ServicesSection/>

@@ -1,89 +1,86 @@
-"use client";
+"use client"
 
-import React, { useState } from 'react';
-// Import Lucide icons for consistency
-import { MapPin, Phone, Mail, Clock } from 'lucide-react';
+import React, { useState } from "react"
+import { MapPin, Phone, Mail, Clock } from "lucide-react"
+import { motion } from "framer-motion"
 
-// --- Data for the "Get In Touch" section ---
 const contactDetails = [
   {
     Icon: MapPin,
     title: "Our Office",
-    details: [
-      "123 Construction Plaza, Cantonment Area",
-      "Varanasi, Uttar Pradesh 221002, India"
-    ],
+    details: ["123 Construction Plaza, Cantonment Area", "Varanasi, Uttar Pradesh 221002, India"],
   },
-  {
-    Icon: Phone,
-    title: "Phone",
-    details: ["+91 9876543210", "+91 9876543211"],
-  },
-  {
-    Icon: Mail,
-    title: "Email",
-    details: ["info@drconstructions.com", "projects@drconstructions.com"],
-  },
+  { Icon: Phone, title: "Phone", details: ["+91 9876543210", "+91 9876543211"] },
+  { Icon: Mail, title: "Email", details: ["info@drconstructions.com", "projects@drconstructions.com"] },
   {
     Icon: Clock,
     title: "Business Hours",
-    details: [
-      "Monday - Saturday: 9:00 AM - 6:00 PM",
-      "Sunday: 10:00 AM - 4:00 PM"
-    ],
+    details: ["Monday - Saturday: 9:00 AM - 6:00 PM", "Sunday: 10:00 AM - 4:00 PM"],
   },
-];
+]
 
 const ContactSection = () => {
-  // State for the contact form
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    message: '',
-  });
-  
-  const [charCount, setCharCount] = useState(0);
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" })
+  const [charCount, setCharCount] = useState(0)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({ ...prevState, [name]: value }));
-    
-    if (name === 'message') {
-      setCharCount(value.length);
-    }
-  };
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+    if (name === "message") setCharCount(value.length)
+  }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  
-    console.log("Form Submitted:", formData);
-    alert("Thank you for your message! We will get back to you soon.");
-   
-    setFormData({ name: '', email: '', phone: '', message: '' });
-    setCharCount(0);
-  };
+    e.preventDefault()
+    console.log("Form Submitted:", formData)
+    alert("Thank you for your message! We will get back to you soon.")
+    setFormData({ name: "", email: "", phone: "", message: "" })
+    setCharCount(0)
+  }
 
   return (
     <section id="contact" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Let&apos;s Build Together
-          </h2>
+        <motion.div
+          className="text-center mb-16"
+          initial={{ y: 14, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Let&apos;s Build Together</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Ready to start your construction or design project? Get in touch with us and let&apos;s discuss how we can bring your vision to life.
+            Ready to start your construction or design project? Get in touch with us and let&apos;s discuss how we can
+            bring your vision to life.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Left Column: Get In Touch & Map */}
-          <div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">Get In Touch</h3>
+          <motion.div
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ staggerChildren: 0.06 }}
+          >
+            <motion.h3
+              className="text-2xl font-bold text-gray-900 mb-6"
+              variants={{
+                hidden: { y: 12, opacity: 0 },
+                show: { y: 0, opacity: 1, transition: { duration: 0.45, ease: "easeOut" } },
+              }}
+            >
+              Get In Touch
+            </motion.h3>
+
             <div className="space-y-6">
               {contactDetails.map((item, index) => (
-                <div key={index} className="flex items-start space-x-4">
+                <motion.div
+                  key={index}
+                  className="flex items-start space-x-4"
+                  variants={{
+                    hidden: { y: 12, opacity: 0 },
+                    show: { y: 0, opacity: 1, transition: { duration: 0.45, ease: "easeOut" } },
+                  }}
+                >
                   <div className="w-12 h-12 bg-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
                     <item.Icon className="text-white" size={24} />
                   </div>
@@ -98,11 +95,17 @@ const ContactSection = () => {
                       ))}
                     </p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
-            {/* Google Maps Embed */}
-         <div className="mt-8">
+
+            <motion.div
+              className="mt-8"
+              initial={{ y: 12, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+            >
               <iframe
                 src="https://maps.google.com/maps?q=Varanasi&t=&z=15&ie=UTF8&iwloc=&output=embed"
                 width="100%"
@@ -113,42 +116,93 @@ const ContactSection = () => {
                 referrerPolicy="no-referrer-when-downgrade"
                 className="rounded-lg shadow-lg"
               ></iframe>
-            </div>
+            </motion.div>
+          </motion.div>
 
-          </div>
-
-         
-          <div>
+          <motion.div
+            initial={{ y: 18, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.55, ease: "easeOut" }}
+          >
             <form onSubmit={handleSubmit} className="bg-gray-50 p-8 rounded-xl shadow-md">
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h3>
               <div className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
-                  <input id="name" name="name" type="text" value={formData.name} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 text-sm" placeholder="Enter your full name" />
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 text-sm"
+                    placeholder="Enter your full name"
+                  />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
-                  <input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 text-sm" placeholder="Enter your email address" />
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 text-sm"
+                    placeholder="Enter your email address"
+                  />
                 </div>
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
-                  <input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 text-sm" placeholder="Enter your phone number" />
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number *
+                  </label>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 text-sm"
+                    placeholder="Enter your phone number"
+                  />
                 </div>
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Project Details *</label>
-                  <textarea id="message" name="message" value={formData.message} onChange={handleChange} required maxLength={500} rows={5} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm placeholder:text-gray-400 resize-none" placeholder="Tell us about your project requirements..."></textarea>
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Details *
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    maxLength={500}
+                    rows={5}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm placeholder:text-gray-400 resize-none"
+                    placeholder="Tell us about your project requirements..."
+                  ></textarea>
                   <div className="text-right text-xs text-gray-500 mt-1">{charCount}/500 characters</div>
                 </div>
-                <button type="submit" className="font-semibold rounded-lg transition-all duration-300 cursor-pointer whitespace-nowrap bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-xl px-8 py-4 text-lg w-full">
+                <button
+                  type="submit"
+                  className="font-semibold rounded-lg transition-all duration-300 cursor-pointer whitespace-nowrap bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-xl px-8 py-4 text-lg w-full"
+                >
                   Send Message
                 </button>
               </div>
             </form>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default ContactSection;
+export default ContactSection
