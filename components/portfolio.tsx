@@ -1,103 +1,115 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import Image from "next/image"
 import { MapPin, ArrowRight } from "lucide-react"
 import { motion, AnimatePresence, Variants } from "framer-motion"
+import { client } from "@/sanity/lib/sanity"
+import { urlFor } from "@/sanity/lib/sanity"
+import { Project } from "@/sanity/types/project"
 
-// --- Project Data ---
-// In a real app, you might fetch this data from a CMS or API
-const allProjectsData = [
-  {
-    id: "residential-1",
-    image: "/projects/residential-1.jpg",
-    category: "Residential",
-    title: "Ganga View Residences",
-    location: "Assi Ghat, Varanasi",
-    description:
-      "Luxury residential complex with stunning Ganga views, combining modern amenities with traditional Varanasi architecture.",
-  },
-  {
-    id: "commercial-1",
-    image: "/projects/commercial-1.jpg",
-    category: "Commercial",
-    title: "Heritage Mall Complex",
-    location: "Cantonment, Varanasi",
-    description:
-      "Modern shopping and entertainment complex designed to serve the growing commercial needs of Varanasi.",
-  },
-  {
-    id: "renovation-1",
-    image: "/projects/renovation-1.jpg",
-    category: "Renovation",
-    title: "Ancient Haveli Restoration",
-    location: "Old City, Varanasi",
-    description:
-      "Careful restoration of a 200-year-old haveli, preserving its historical significance while adding modern comforts.",
-  },
-  {
-    id: "residential-2",
-    image: "/projects/residential-2.jpg",
-    category: "Residential",
-    title: "Silk Weaver Housing",
-    location: "Sarai Mohana, Varanasi",
-    description:
-      "Affordable housing project designed specifically for the silk weaving community, honoring their cultural heritage.",
-  },
-  {
-    id: "commercial-2",
-    image: "/projects/commercial-2.jpg",
-    category: "Commercial",
-    title: "Tech Park Varanasi",
-    location: "Ramnagar, Varanasi",
-    description:
-      "State-of-the-art technology park bringing modern workspace solutions to Varanasi's growing IT sector.",
-  },
-  {
-    id: "renovation-2",
-    image: "/projects/renovation-2.jpg",
-    category: "Renovation",
-    title: "Temple Complex Renovation",
-    location: "Dashashwamedh Ghat, Varanasi",
-    description:
-      "Sensitive renovation of ancient temple complex, maintaining spiritual sanctity while ensuring structural integrity.",
-  },
-]
+const projectsQuery = `*[_type == "project"]  {
+  _id,
+  title,
+  slug,
+  category,
+  location,
+  description,
+  mainImage,
+  featured,
+}`
 
 const PortfolioSection = () => {
   const [activeFilter, setActiveFilter] = useState("All Projects")
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
   const [hasAnimated, setHasAnimated] = useState(false)
-  const filterButtons = ["All Projects", "Residential", "Commercial", "Renovation"]
 
-  // Memoize the filtered projects to avoid re-calculating on every render
+  // Fetch projects from Sanity
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const data = await client.fetch(projectsQuery)
+        setProjects(data)
+      } catch (error) {
+        console.error("Error fetching projects:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProjects()
+  }, [])
+
+  // Dynamically generate filter buttons based on available categories
+  const filterButtons = useMemo(() => {
+    if (!projects.length) return ["All Projects"]
+    
+    // Extract unique categories from projects
+    const categories = [...new Set(projects.map(project => project.category))]
+      .filter(Boolean) // Remove any null/undefined categories
+      .sort() // Sort alphabetically
+    
+    return ["All Projects", ...categories]
+  }, [projects])
+
+  // Memoize the filtered projects
   const filteredProjects = useMemo(() => {
     if (activeFilter === "All Projects") {
-      return allProjectsData
+      return projects
     }
-    return allProjectsData.filter((project) => project.category === activeFilter)
-  }, [activeFilter])
+    return projects.filter((project) => project.category === activeFilter)
+  }, [activeFilter, projects])
 
   const cardVariants: Variants = {
     hidden: { y: 15, opacity: 0 },
-    show: { 
-      y: 0, 
-      opacity: 1, 
-      transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } 
+    show: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
     },
   }
 
   const filterCardVariants: Variants = {
     initial: { opacity: 0, scale: 0.95 },
-    animate: { 
-      opacity: 1, 
+    animate: {
+      opacity: 1,
       scale: 1,
       transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
     },
-    exit: { 
-      opacity: 0, 
+    exit: {
+      opacity: 0,
       scale: 0.95,
       transition: { duration: 0.2 }
     }
+  }
+
+  // Loading state
+  if (loading) {
+    return (
+      <section id="projects" className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-300 rounded w-48 mx-auto mb-4"></div>
+              <div className="h-4 bg-gray-300 rounded w-96 mx-auto mb-8"></div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3].map((item) => (
+                <div key={item} className="bg-white rounded-xl shadow-lg animate-pulse">
+                  <div className="h-64 bg-gray-300 rounded-t-xl"></div>
+                  <div className="p-6">
+                    <div className="h-6 bg-gray-300 rounded mb-2"></div>
+                    <div className="h-4 bg-gray-300 rounded mb-3"></div>
+                    <div className="h-4 bg-gray-300 rounded mb-4"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    )
   }
 
   return (
@@ -116,6 +128,8 @@ const PortfolioSection = () => {
             Discover our diverse range of projects that showcase our commitment to excellence and innovation in
             construction and design.
           </p>
+          
+          {/* Dynamic Filter Buttons */}
           <motion.div
             className="flex flex-wrap justify-center gap-4"
             initial="hidden"
@@ -142,7 +156,7 @@ const PortfolioSection = () => {
             ))}
           </motion.div>
         </motion.div>
-        
+
         {activeFilter === "All Projects" ? (
           <motion.div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
@@ -153,18 +167,20 @@ const PortfolioSection = () => {
           >
             {filteredProjects.map((project) => (
               <motion.div
-                key={project.id}
+                key={project._id}
                 variants={cardVariants}
                 className="group bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer"
               >
                 <div className="relative overflow-hidden">
-                  <Image
-                    src={project.image || "/placeholder.svg"}
-                    alt={project.title}
-                    width={600}
-                    height={400}
-                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
+                  {project.mainImage && (
+                    <Image
+                      src={urlFor(project.mainImage).width(600).height(400).url()}
+                      alt={project.mainImage.alt || project.title}
+                      width={600}
+                      height={400}
+                      className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
                   <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium capitalize">
                     {project.category}
@@ -192,7 +208,7 @@ const PortfolioSection = () => {
             <AnimatePresence mode="wait">
               {filteredProjects.map((project, index) => (
                 <motion.div
-                  key={project.id}
+                  key={project._id}
                   variants={filterCardVariants}
                   initial="initial"
                   animate="animate"
@@ -201,13 +217,15 @@ const PortfolioSection = () => {
                   className="group bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer"
                 >
                   <div className="relative overflow-hidden">
-                    <Image
-                      src={project.image || "/placeholder.svg"}
-                      alt={project.title}
-                      width={600}
-                      height={400}
-                      className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
+                    {project.mainImage && (
+                      <Image
+                        src={urlFor(project.mainImage).width(600).height(400).url()}
+                        alt={project.mainImage.alt || project.title}
+                        width={600}
+                        height={400}
+                        className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                    )}
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
                     <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium capitalize">
                       {project.category}
@@ -230,6 +248,12 @@ const PortfolioSection = () => {
                 </motion.div>
               ))}
             </AnimatePresence>
+          </div>
+        )}
+
+        {filteredProjects.length === 0 && !loading && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">No projects found in this category.</p>
           </div>
         )}
       </div>
