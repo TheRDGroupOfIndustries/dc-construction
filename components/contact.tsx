@@ -17,25 +17,43 @@ const contactDetails = [
     title: "Business Hours",
     details: ["Monday - Saturday: 9:00 AM - 6:00 PM", "Sunday: 10:00 AM - 4:00 PM"],
   },
-]
+];
 
 const ContactSection = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" })
-  const [charCount, setCharCount] = useState(0)
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
+  const [charCount, setCharCount] = useState(0);
+  const [status, setStatus] = useState({ state: 'idle', message: '' }); // idle, sending, success, error
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-    if (name === "message") setCharCount(value.length)
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "message") setCharCount(value.length);
+  };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    console.log("Form Submitted:", formData)
-    alert("Thank you for your message! We will get back to you soon.")
-    setFormData({ name: "", email: "", phone: "", message: "" })
-    setCharCount(0)
-  }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus({ state: 'sending', message: '' });
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setStatus({ state: 'success', message: 'Message sent successfully! Thank you.' });
+        setFormData({ name: "", email: "", phone: "", message: "" });
+        setCharCount(0);
+      } else {
+        throw new Error(result.error || 'Something went wrong.');
+      }
+    } catch (error: any) {
+      setStatus({ state: 'error', message: error.message });
+    }
+  };
 
   return (
     <section id="contact" className="py-20 bg-white">
@@ -47,10 +65,9 @@ const ContactSection = () => {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Let&apos;s Build Together</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Let's Build Together</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Ready to start your construction or design project? Get in touch with us and let&apos;s discuss how we can
-            bring your vision to life.
+            Ready to start your construction or design project? Get in touch with us and let's discuss how we can bring your vision to life.
           </p>
         </motion.div>
 
@@ -129,73 +146,38 @@ const ContactSection = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h3>
               <div className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 text-sm"
-                    placeholder="Enter your full name"
-                  />
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                  <input id="name" name="name" type="text" value={formData.name} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 text-black rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 text-sm" placeholder="Enter your full name" />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address *
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 text-sm"
-                    placeholder="Enter your email address"
-                  />
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                  <input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 text-black focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 text-sm" placeholder="Enter your email address" />
                 </div>
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number *
-                  </label>
-                  <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 text-sm"
-                    placeholder="Enter your phone number"
-                  />
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                  <input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleChange} required className="w-full px-4 py-3 border border-gray-300 rounded-lg text-black focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-gray-400 text-sm" placeholder="Enter your phone number" />
                 </div>
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    Project Details *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    maxLength={500}
-                    rows={5}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm placeholder:text-gray-400 resize-none"
-                    placeholder="Tell us about your project requirements..."
-                  ></textarea>
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">Project Details *</label>
+                  <textarea id="message" name="message" value={formData.message} onChange={handleChange} required maxLength={500} rows={5} className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm placeholder:text-gray-400  text-black resize-none" placeholder="Tell us about your project requirements..."></textarea>
                   <div className="text-right text-xs text-gray-500 mt-1">{charCount}/500 characters</div>
                 </div>
+
                 <button
                   type="submit"
-                  className="font-semibold rounded-lg transition-all duration-300 cursor-pointer whitespace-nowrap bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-xl px-8 py-4 text-lg w-full"
+                  disabled={status.state === 'sending'}
+                  className="font-semibold rounded-lg transition-all duration-300 cursor-pointer whitespace-nowrap bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-xl px-8 py-4 text-lg w-full disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send Message
+                  {status.state === 'sending' ? 'Sending...' : 'Send Message'}
                 </button>
+
+                {status.message && (
+                  <p className={`text-center text-sm mt-4 ${
+                    status.state === 'success' ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {status.message}
+                  </p>
+                )}
               </div>
             </form>
           </motion.div>

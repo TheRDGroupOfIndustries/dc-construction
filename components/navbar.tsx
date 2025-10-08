@@ -60,12 +60,13 @@ const Navbar = () => {
         </div>
 
         {/* Get Quote Button (Desktop) */}
-      <div className="hidden md:block">
-          <button className="bg-gradient-to-r from-red-600 to-red-800 text-white px-6 py-2 rounded-full hover:from-red-700 hover:to-red-900 transition-all whitespace-nowrap cursor-pointer">
-            Get Quote
-          </button>
-        </div>
-
+     <div className="hidden md:block">
+  <Link href="#contact">
+    <button className="bg-gradient-to-r from-red-600 to-red-800 text-white px-6 py-2 rounded-full hover:from-red-700 hover:to-red-900 transition-all whitespace-nowrap cursor-pointer">
+      Get Quote
+    </button>
+  </Link>
+</div>
         {/* Mobile Menu Button */}
         <div className="md:hidden">
           <button

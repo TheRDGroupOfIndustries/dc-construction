@@ -58,7 +58,7 @@ const HeroSection = () => {
               show: { y: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
             }}
           >
-            <Link href="/projects">
+            <Link href="#projects">
               <button
                 type="button"
                 className="font-semibold rounded-lg transition-all duration-300 cursor-pointer whitespace-nowrap bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg hover:shadow-xl px-8 py-4 text-lg transform hover:scale-105"
@@ -74,12 +74,12 @@ const HeroSection = () => {
               show: { y: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
             }}
           >
-            <Link href="/contact">
+            <Link href="#contact">
               <button
                 type="button"
                 className="font-semibold rounded-lg transition-all duration-300 cursor-pointer whitespace-nowrap border-2 px-8 py-4 text-lg bg-white/10 backdrop-blur-sm border-white text-white hover:bg-white hover:text-gray-900"
               >
-                Contact Us
+               Get Quote
               </button>
             </Link>
           </motion.div>
