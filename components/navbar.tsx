@@ -5,21 +5,10 @@ import Link from "next/link";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+ 
 
   // Effect to handle scroll detection
-  useEffect(() => {
-    const handleScroll = () => {
-      // Set scrolled to true if user has scrolled more than 10px, else false
-      setScrolled(window.scrollY > 10);
-    };
 
-    // Add event listener on mount
-    window.addEventListener("scroll", handleScroll);
-
-    // Clean up event listener on unmount
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
 
   const navLinks = [

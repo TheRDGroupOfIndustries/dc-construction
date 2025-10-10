@@ -23,7 +23,7 @@ const PortfolioSection = () => {
   const [activeFilter, setActiveFilter] = useState("All Projects")
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
-  const [hasAnimated, setHasAnimated] = useState(false)
+  
 
   // Fetch projects from Sanity
   useEffect(() => {
@@ -121,7 +121,7 @@ const PortfolioSection = () => {
           whileInView={{ y: 0, opacity: 1 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          onAnimationComplete={() => setHasAnimated(true)}
+         
         >
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Our Portfolio</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">

@@ -17,43 +17,44 @@ const contactDetails = [
     title: "Business Hours",
     details: ["Monday - Saturday: 9:00 AM - 6:00 PM", "Sunday: 10:00 AM - 4:00 PM"],
   },
-];
+]
 
 const ContactSection = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
-  const [charCount, setCharCount] = useState(0);
-  const [status, setStatus] = useState({ state: 'idle', message: '' }); // idle, sending, success, error
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" })
+  const [charCount, setCharCount] = useState(0)
+  const [status, setStatus] = useState<{ state: "idle" | "sending" | "success" | "error"; message: string }>({ state: 'idle', message: '' })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (name === "message") setCharCount(value.length);
-  };
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+    if (name === "message") setCharCount(value.length)
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setStatus({ state: 'sending', message: '' });
+    e.preventDefault()
+    setStatus({ state: 'sending', message: '' })
 
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
-      });
+      })
 
-      const result = await response.json();
+      const result = await response.json()
 
       if (response.ok) {
-        setStatus({ state: 'success', message: 'Message sent successfully! Thank you.' });
-        setFormData({ name: "", email: "", phone: "", message: "" });
-        setCharCount(0);
+        setStatus({ state: 'success', message: 'Message sent successfully! Thank you.' })
+        setFormData({ name: "", email: "", phone: "", message: "" })
+        setCharCount(0)
       } else {
-        throw new Error(result.error || 'Something went wrong.');
+        throw new Error(result.error ?? 'Something went wrong.')
       }
-    } catch (error: any) {
-      setStatus({ state: 'error', message: error.message });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Something went wrong.'
+      setStatus({ state: 'error', message })
     }
-  };
+  }
 
   return (
     <section id="contact" className="py-20 bg-white">
@@ -65,9 +66,9 @@ const ContactSection = () => {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Let's Build Together</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Let&apos;s Build Together</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Ready to start your construction or design project? Get in touch with us and let's discuss how we can bring your vision to life.
+            Ready to start your construction or design project? Get in touch with us and let&apos;s discuss how we can bring your vision to life.
           </p>
         </motion.div>
 
@@ -128,7 +129,7 @@ const ContactSection = () => {
                 width="100%"
                 height="250"
                 style={{ border: 0 }}
-                allowFullScreen={true}
+                allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="rounded-lg shadow-lg"
@@ -172,9 +173,7 @@ const ContactSection = () => {
                 </button>
 
                 {status.message && (
-                  <p className={`text-center text-sm mt-4 ${
-                    status.state === 'success' ? 'text-green-600' : 'text-red-600'
-                  }`}>
+                  <p className={`text-center text-sm mt-4 ${status.state === 'success' ? 'text-green-600' : 'text-red-600'}`}>
                     {status.message}
                   </p>
                 )}
