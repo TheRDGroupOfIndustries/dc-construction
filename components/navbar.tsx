@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Pacifico } from "next/font/google";
 
-const pacifico = Pacifico({ 
+const pacifico = Pacifico({
   weight: "400",
   subsets: ["latin"],
   display: "swap",
@@ -32,15 +32,18 @@ const Navbar = () => {
       <nav className="container mx-auto px-6 lg:px-36 py-3.5 flex justify-between items-center">
         {/* Brand Logo + Name */}
         <Link href="/" className="flex items-center space-x-3">
-          {/* Logo */}
+          {/* Logo - hidden on small screens */}
           <Image
-            src="/logo.png" 
+            src="/logo.png"
             alt="D & R Constructions Logo"
-            width={40} 
+            width={40}
             height={40}
+            className="hidden md:block" // 👈 hides logo on small screens
           />
-          {/* Heading */}
-          <h1 className={`text-xl md:text-2xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent ${pacifico.className}`}>
+          {/* Heading - always visible */}
+          <h1
+            className={`text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent ${pacifico.className}`}
+          >
             D & R Constructions
           </h1>
         </Link>
