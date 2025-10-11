@@ -98,9 +98,14 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
-          <button className="bg-gradient-to-r from-red-700 to-red-500 text-white font-semibold px-8 py-2 rounded-lg shadow-md hover:shadow-lg w-4/5 mt-2">
-            Get Quote
-          </button>
+         <Link
+  href="#contact"
+  className="inline-block bg-gradient-to-r from-red-700 to-red-500 text-white font-semibold px-8 py-2 rounded-lg shadow-md hover:shadow-lg w-4/5 mt-2 text-center transition-all duration-300"
+   onClick={() => setIsOpen(false)}
+>
+  Get Quote
+</Link>
+
         </div>
       </div>
     </header>
