@@ -90,9 +90,15 @@ const WhyChooseUsSection = () => {
           <p className="text-xl mb-8 opacity-90">
             Let&apos;s discuss your vision and bring it to life with our expertise and dedication.
           </p>
-          <button className="bg-white text-red-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors cursor-pointer whitespace-nowrap">
-            Get Free Consultation
-          </button>
+          <a
+  href="https://wa.link/eetslc"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="bg-white text-red-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors cursor-pointer whitespace-nowrap inline-block"
+>
+  Get Free Consultation
+</a>
+
         </motion.div>
       </div>
     </section>
